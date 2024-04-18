@@ -1,4 +1,4 @@
-package com.bored.api;
+package com.bored.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoredResponse {
+public class BoredDAO {
 
     @Getter @Setter private long key;
     @Getter @Setter private String activity;

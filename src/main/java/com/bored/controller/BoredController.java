@@ -1,9 +1,9 @@
-package com.bored.api;
+package com.bored.controller;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.bored.service.BoredService;
+import com.bored.model.dto.response.BoredResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,13 +16,13 @@ public class BoredController {
     }
 
     @GetMapping("${bored.project.base}")
-    public ResponseEntity<BoredWrapper> randomAPI(){
+    public ResponseEntity<BoredResponse> randomAPI(){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(boredService.getRandomActivity());
     }
 
     @GetMapping("${bored.project.base}" + "${bored.project.fetch}" + "/activity/{type}")
-    public ResponseEntity<BoredWrapper> getByTypeAPI(@PathVariable String type){
+    public ResponseEntity<BoredResponse> getByTypeAPI(@PathVariable String type){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(boredService.getActivityByType(type));
     }

@@ -1,4 +1,4 @@
-package com.bored.api;
+package com.bored.model.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoredWrapper {
+public class BoredResponse {
 
     @Getter @Setter private String activityName;
     @Getter @Setter private String activityType;

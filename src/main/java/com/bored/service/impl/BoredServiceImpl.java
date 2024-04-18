@@ -1,5 +1,8 @@
-package com.bored.api;
+package com.bored.service.impl;
 
+import com.bored.model.dto.response.BoredResponse;
+import com.bored.model.dto.BoredDAO;
+import com.bored.service.BoredService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,11 +21,11 @@ public class BoredServiceImpl implements BoredService {
     }
 
     @Override
-    public BoredWrapper getRandomActivity(){
+    public BoredResponse getRandomActivity(){
         String randomEndpoint = boredBaseUrl + "/activity/";
-        BoredResponse bored = restTemplate.getForObject(randomEndpoint, BoredResponse.class);
+        BoredDAO bored = restTemplate.getForObject(randomEndpoint, BoredDAO.class);
 
-        BoredWrapper boredWrap = new BoredWrapper();
+        BoredResponse boredWrap = new BoredResponse();
         boredWrap.setActivityName(bored.getActivity());
         boredWrap.setLink(bored.getLink());
         boredWrap.setActivityType(bored.getType());
@@ -33,11 +36,11 @@ public class BoredServiceImpl implements BoredService {
     }
 
     @Override
-    public BoredWrapper getActivityByType(String type){
+    public BoredResponse getActivityByType(String type){
         String byTypeEndpoint = boredBaseUrl + "/activity?type="+type;
-        BoredResponse bored = restTemplate.getForObject(byTypeEndpoint, BoredResponse.class);
+        BoredDAO bored = restTemplate.getForObject(byTypeEndpoint, BoredDAO.class);
 
-        BoredWrapper boredWrap = new BoredWrapper();
+        BoredResponse boredWrap = new BoredResponse();
         boredWrap.setActivityName(bored.getActivity());
         boredWrap.setLink(bored.getLink());
         boredWrap.setActivityType(bored.getType());
@@ -48,11 +51,11 @@ public class BoredServiceImpl implements BoredService {
     }
 
     @Override
-    public BoredWrapper getActivityByParticipants(int numOfPerson){
+    public BoredResponse getActivityByParticipants(int numOfPerson){
         String byParticipantEndpoint = boredBaseUrl + "/activity?participants="+numOfPerson;
-        BoredResponse bored = restTemplate.getForObject(byParticipantEndpoint, BoredResponse.class);
+        BoredDAO bored = restTemplate.getForObject(byParticipantEndpoint, BoredDAO.class);
 
-        BoredWrapper boredWrap = new BoredWrapper();
+        BoredResponse boredWrap = new BoredResponse();
         boredWrap.setActivityName(bored.getActivity());
         boredWrap.setLink(bored.getLink());
         boredWrap.setActivityType(bored.getType());
