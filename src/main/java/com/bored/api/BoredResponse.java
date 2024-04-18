@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class Bored {
+public class BoredResponse {
 
     @Getter @Setter private long key;
     @Getter @Setter private String activity;

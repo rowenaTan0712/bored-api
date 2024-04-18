@@ -1,8 +1,8 @@
 package com.bored.api;
 
-public interface BoredLayer {
+public interface BoredService {
 
-    public Bored getRandomActivity();
-    public Bored getActivityByType(String type);
-    public Bored getActivityByParticipants(int numOfPerson);
+    public BoredWrapper getRandomActivity();
+    public BoredWrapper getActivityByType(String type);
+    public BoredWrapper getActivityByParticipants(int numOfPerson);
 }
