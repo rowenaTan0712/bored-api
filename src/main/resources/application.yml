@@ -1,0 +1,6 @@
+bored:
+  api:
+    base: 'https://www.boredapi.com/api'
+  project:
+    base: '/iambored'
+    fetch: '/spontaneous'
