@@ -1,17 +1,19 @@
 package com.bored.model.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class BoredResponse {
 
-    @Getter @Setter private String activityName;
-    @Getter @Setter private String activityType;
-    @Getter @Setter private double price;
-    @Getter @Setter private int participantNumber;
-    @Getter @Setter private String link;
+    private long key;
+    private String activity;
+    private String link;
+    private int accessibility;
+    private String type;
+    private int participants;
+    private double price;
 }

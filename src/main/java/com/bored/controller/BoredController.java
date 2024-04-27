@@ -1,7 +1,8 @@
 package com.bored.controller;
 
 import com.bored.service.BoredService;
-import com.bored.model.dto.response.BoredResponse;
+import com.bored.model.dto.BoredDTO;
+import com.bored.util.BoredException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,25 +19,20 @@ public class BoredController {
     }
 
     @GetMapping("${bored.project.base}")
-    public ResponseEntity<BoredResponse> randomAPI(){
+    public ResponseEntity<BoredDTO> randomAPI() throws BoredException {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(boredService.getRandomActivity());
     }
 
-    @GetMapping("${bored.project.base}" + "${bored.project.fetch}" + "/activity/{type}")
-    public ResponseEntity<BoredResponse> getByTypeAPI(@PathVariable String type){
+    @GetMapping("${bored.project.base}"+"/type"+"/{type}")
+    public ResponseEntity<BoredDTO> getByType(@PathVariable String type) throws BoredException {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(boredService.getActivityByType(type));
     }
 
-    @GetMapping("${bored.project.base}" + "${bored.project.fetch}" + "/in-group")
-    public ResponseEntity<Object> getByNumberOfParticipants(@RequestParam("number of participants") int number){
-        if(number > 5){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("No activities available for more than 5 participants");
-        }else{
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(boredService.getActivityByParticipants(number));
-        }
+    @GetMapping("${bored.project.base}"+"/group")
+    public ResponseEntity<BoredDTO> getByNumberOfParticipants(@RequestParam int participants) throws BoredException {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(boredService.getActivityByParticipants(participants));
     }
 }

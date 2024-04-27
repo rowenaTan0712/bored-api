@@ -1,19 +1,26 @@
 package com.bored.service.impl;
 
+import com.bored.model.dto.ActivityDTO;
 import com.bored.model.dto.response.BoredResponse;
-import com.bored.model.dto.BoredDAO;
+import com.bored.model.dto.BoredDTO;
 import com.bored.service.BoredService;
+import com.bored.util.BoredException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Locale;
 
 @Service
 public class BoredServiceImpl implements BoredService {
 
     @Autowired
     private final RestTemplate restTemplate;
-    @Value("${bored.api.base}")
+    @Value("${bored-source.api.base}")
     private String boredBaseUrl;
 
     public BoredServiceImpl(RestTemplate restTemplate){
@@ -21,47 +28,110 @@ public class BoredServiceImpl implements BoredService {
     }
 
     @Override
-    public BoredResponse getRandomActivity(){
+    public BoredDTO getRandomActivity() throws BoredException {
+        BoredDTO boredDTO = new BoredDTO();
         String randomEndpoint = boredBaseUrl + "/activity/";
-        BoredDAO bored = restTemplate.getForObject(randomEndpoint, BoredDAO.class);
 
-        BoredResponse boredWrap = new BoredResponse();
-        boredWrap.setActivityName(bored.getActivity());
-        boredWrap.setLink(bored.getLink());
-        boredWrap.setActivityType(bored.getType());
-        boredWrap.setPrice(bored.getPrice());
-        boredWrap.setParticipantNumber(bored.getParticipants());
+        try{
+            ResponseEntity<BoredResponse> boredResp = restTemplate.getForEntity(randomEndpoint, BoredResponse.class);
+            if(boredResp.getStatusCode() == HttpStatus.OK){
+                ActivityDTO activity = new ActivityDTO();
+                activity.setActivityName(boredResp.getBody().getActivity());
+                activity.setLink(boredResp.getBody().getLink());
+                activity.setActivityType(boredResp.getBody().getType());
+                activity.setPrice(boredResp.getBody().getPrice());
+                activity.setParticipantNumber(boredResp.getBody().getParticipants());
 
-        return boredWrap;
+                boredDTO.setMessage("Success");
+                boredDTO.setActivity(activity);
+            }else{
+                if(boredResp.getStatusCode() == HttpStatus.BAD_REQUEST){
+                    boredDTO.setMessage("Invalid Parameter");
+                }else{
+                    boredDTO.setMessage("Internal Server Error");
+                }
+            }
+        }catch(HttpClientErrorException ex){
+            throw new BoredException(ex.getMessage());
+        }catch(Exception ex){
+            throw new BoredException(ex.getMessage());
+        }
+
+        return boredDTO;
     }
 
     @Override
-    public BoredResponse getActivityByType(String type){
-        String byTypeEndpoint = boredBaseUrl + "/activity?type="+type;
-        BoredDAO bored = restTemplate.getForObject(byTypeEndpoint, BoredDAO.class);
+    public BoredDTO getActivityByType(String type) throws BoredException {
+        BoredDTO boredDTO = new BoredDTO();
+        String typeLowerCase = type.toLowerCase();
+        String byTypeEndpoint = boredBaseUrl + "/activity?type="+typeLowerCase;
 
-        BoredResponse boredWrap = new BoredResponse();
-        boredWrap.setActivityName(bored.getActivity());
-        boredWrap.setLink(bored.getLink());
-        boredWrap.setActivityType(bored.getType());
-        boredWrap.setPrice(bored.getPrice());
-        boredWrap.setParticipantNumber(bored.getParticipants());
+        try{
+            ResponseEntity<BoredResponse> boredResp = restTemplate.getForEntity(byTypeEndpoint, BoredResponse.class);
+            if(boredResp.getStatusCode() == HttpStatus.OK){
+                if(boredResp.getBody().getActivity() != null){
+                    ActivityDTO activity = new ActivityDTO();
+                    activity.setActivityName(boredResp.getBody().getActivity());
+                    activity.setLink(boredResp.getBody().getLink());
+                    activity.setActivityType(boredResp.getBody().getType());
+                    activity.setPrice(boredResp.getBody().getPrice());
+                    activity.setParticipantNumber(boredResp.getBody().getParticipants());
 
-        return boredWrap;
+                    boredDTO.setMessage("Success");
+                    boredDTO.setActivity(activity);
+                }else{
+                    boredDTO.setMessage("No activity found with the specified parameters");
+                }
+            }else{
+                if(boredResp.getStatusCode() == HttpStatus.BAD_REQUEST){
+                    boredDTO.setMessage("Invalid Parameter");
+                }else{
+                    boredDTO.setMessage("Internal Server Error");
+                }
+            }
+        }catch(HttpClientErrorException ex){
+            throw new BoredException(ex.getMessage());
+        }catch(Exception ex){
+            throw new BoredException(ex.getMessage());
+        }
+
+        return boredDTO;
     }
 
     @Override
-    public BoredResponse getActivityByParticipants(int numOfPerson){
-        String byParticipantEndpoint = boredBaseUrl + "/activity?participants="+numOfPerson;
-        BoredDAO bored = restTemplate.getForObject(byParticipantEndpoint, BoredDAO.class);
+    public BoredDTO getActivityByParticipants(int participants) throws BoredException {
+        BoredDTO boredDTO = new BoredDTO();
+        String byParticipantEndpoint = boredBaseUrl + "/activity?participants="+participants;
+        if(participants > 5){
+            boredDTO.setMessage("No activity found with the specified parameters");
+            return boredDTO;
+        }
 
-        BoredResponse boredWrap = new BoredResponse();
-        boredWrap.setActivityName(bored.getActivity());
-        boredWrap.setLink(bored.getLink());
-        boredWrap.setActivityType(bored.getType());
-        boredWrap.setPrice(bored.getPrice());
-        boredWrap.setParticipantNumber(bored.getParticipants());
+        try{
+            ResponseEntity<BoredResponse> boredResp = restTemplate.getForEntity(byParticipantEndpoint, BoredResponse.class);
+            if(boredResp.getStatusCode() == HttpStatus.OK){
+                ActivityDTO activity = new ActivityDTO();
+                activity.setActivityName(boredResp.getBody().getActivity());
+                activity.setLink(boredResp.getBody().getLink());
+                activity.setActivityType(boredResp.getBody().getType());
+                activity.setPrice(boredResp.getBody().getPrice());
+                activity.setParticipantNumber(boredResp.getBody().getParticipants());
 
-        return boredWrap;
+                boredDTO.setMessage("Success");
+                boredDTO.setActivity(activity);
+            }else{
+                if(boredResp.getStatusCode() == HttpStatus.BAD_REQUEST){
+                    boredDTO.setMessage("Invalid Parameter");
+                }else{
+                    boredDTO.setMessage("Internal Server Error");
+                }
+            }
+        }catch(HttpClientErrorException ex){
+            throw new BoredException(ex.getMessage());
+        }catch(Exception ex){
+            throw new BoredException(ex.getMessage());
+        }
+
+        return boredDTO;
     }
 }
