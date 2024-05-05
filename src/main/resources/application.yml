@@ -1,6 +1,8 @@
 bored:
+  project:
+    base: '/iambored/spontaneous/activity'
+bored-source:
   api:
     base: 'https://www.boredapi.com/api'
-  project:
-    base: '/iambored'
-    fetch: '/spontaneous'
+server:
+  port: 4000
