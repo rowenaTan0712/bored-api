@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -55,7 +56,7 @@ public class BoredServiceTest {
     //get random activity throw boredexception
     @Test
     public void testGetRandomActivityReturnBoredException() throws BoredException {
-        when(boredService.getRandomActivity()).thenThrow(new BoredException("Internal Server Error"));
+        when(boredService.getRandomActivity()).thenThrow(new BoredException("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR));
 
         BoredException exception = assertThrows(BoredException.class, () -> {boredService.getRandomActivity();});
         assertEquals("Internal Server Error", exception.getMessage());

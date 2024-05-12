@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Locale;
-
 @Service
 public class BoredServiceImpl implements BoredService {
 
@@ -32,9 +30,9 @@ public class BoredServiceImpl implements BoredService {
         BoredDTO boredDTO = new BoredDTO();
         String randomEndpoint = boredBaseUrl + "/activity/";
 
-        try{
+        try {
             ResponseEntity<BoredResponse> boredResp = restTemplate.getForEntity(randomEndpoint, BoredResponse.class);
-            if(boredResp.getStatusCode() == HttpStatus.OK){
+            if (boredResp.getStatusCode() == HttpStatus.OK) {
                 ActivityDTO activity = new ActivityDTO();
                 activity.setActivityName(boredResp.getBody().getActivity());
                 activity.setLink(boredResp.getBody().getLink());
@@ -44,17 +42,13 @@ public class BoredServiceImpl implements BoredService {
 
                 boredDTO.setMessage("Success");
                 boredDTO.setActivity(activity);
-            }else{
-                if(boredResp.getStatusCode() == HttpStatus.BAD_REQUEST){
-                    boredDTO.setMessage("Invalid Parameter");
-                }else{
-                    boredDTO.setMessage("Internal Server Error");
-                }
             }
+        }catch(HttpClientErrorException.BadRequest ex){
+            throw new BoredException(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }catch(HttpClientErrorException ex){
-            throw new BoredException(ex.getMessage());
-        }catch(Exception ex){
-            throw new BoredException(ex.getMessage());
+            throw new BoredException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }catch(RuntimeException ex){
+            throw new BoredException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return boredDTO;
@@ -82,17 +76,13 @@ public class BoredServiceImpl implements BoredService {
                 }else{
                     boredDTO.setMessage("No activity found with the specified parameters");
                 }
-            }else{
-                if(boredResp.getStatusCode() == HttpStatus.BAD_REQUEST){
-                    boredDTO.setMessage("Invalid Parameter");
-                }else{
-                    boredDTO.setMessage("Internal Server Error");
-                }
             }
+        }catch(HttpClientErrorException.BadRequest ex){
+            throw new BoredException(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }catch(HttpClientErrorException ex){
-            throw new BoredException(ex.getMessage());
-        }catch(Exception ex){
-            throw new BoredException(ex.getMessage());
+            throw new BoredException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }catch(RuntimeException ex){
+            throw new BoredException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return boredDTO;
@@ -119,17 +109,13 @@ public class BoredServiceImpl implements BoredService {
 
                 boredDTO.setMessage("Success");
                 boredDTO.setActivity(activity);
-            }else{
-                if(boredResp.getStatusCode() == HttpStatus.BAD_REQUEST){
-                    boredDTO.setMessage("Invalid Parameter");
-                }else{
-                    boredDTO.setMessage("Internal Server Error");
-                }
             }
+        }catch(HttpClientErrorException.BadRequest ex){
+            throw new BoredException(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }catch(HttpClientErrorException ex){
-            throw new BoredException(ex.getMessage());
-        }catch(Exception ex){
-            throw new BoredException(ex.getMessage());
+            throw new BoredException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }catch(RuntimeException ex){
+            throw new BoredException(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return boredDTO;
