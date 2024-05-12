@@ -1,8 +1,16 @@
 package com.bored.util;
 
-public class BoredException extends Exception{
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
-    public BoredException(String message){
+@Getter
+@Setter
+public class BoredException extends RuntimeException{
+    private HttpStatus status;
+
+    public BoredException(String message, HttpStatus status){
         super(message);
+        this.status = status;
     }
 }
